@@ -1550,11 +1550,5 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=p
 var trajectory1 = L.polyline(locationsArray
     , {color: 'red'}).addTo(shenzhenMap);
 
-var distanceTraveled = 0;
-var prevCoordinate =  L.latLng(22.544399, 114.039803);
-for (var i=1; i<locationsArray.length;i++){
-    var currentCoordinate = L.latLng(locationsArray[i][0],locationsArray[i][1]);
-    distanceTraveled += currentCoordinate.distanceTo(prevCoordinate);
-    prevCoordinate = currentCoordinate;
-}
-console.log(distanceTraveled);
+
+console.log(getDistanceTraveled(locationsArray));

@@ -7,8 +7,9 @@ client = MongoClient()
 db = client.testDB
 
 trajectoryArray = []
+records = []
 with open("GPS_2016_01_02", 'r') as file:
-    for i in range(80000,500000):
+    while True:
         entry = file.readline()
         if entry == "":
             break
@@ -33,7 +34,7 @@ with open("GPS_2016_01_02", 'r') as file:
             try:
                 if (float(infoArray[1]) > 113.5 and float(infoArray[1]) < 115):
                     longitude = float(infoArray[1])
-                elif (float(infoArray[1]) * 10 > 113.5 and float(infoArray[1]) < 115):
+                elif (float(infoArray[1]) * 10 > 113.5 and float(infoArray[1])*10 < 115):
                     longitude = float(infoArray[1]) * 10
                 else:
                     continue
@@ -54,6 +55,5 @@ with open("GPS_2016_01_02", 'r') as file:
 
             oneRecord = {"licensePlate": licensePlate, "latitude": latitude,
                          "longitude": longitude, "timeRecorded": timeInNumber}
-
-            result = db.shenzhenTaxis.insert_one(oneRecord)
-            print(result.inserted_id)
+            records.append(oneRecord)
+    result = db.shenzhenTaxis2.insert(records)

@@ -8,8 +8,8 @@ db = client.testDB  # name of database: 'testDB'
 
 print(db.shenzhenTaxis.count())
 
-cursor = db.shenzhenTaxis.find(    {  "latitude": { "$lt": 22.545 } }          )
-print(cursor.count())
+#cursor = db.shenzhenTaxis.find(    {  "latitude": { "$lt": 22.545 } }          )
+#print(cursor.count())
 # db.shenzhenTaxis.create_index([("timeRecorded",pymongo.ASCENDING)])
 
 
