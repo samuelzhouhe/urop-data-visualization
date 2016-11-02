@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shenzhen Traffic</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CSS FILES IMPORTING -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.css"/>
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css">
+</head>
+
+
+<body ng-app="shenzhenTaxis" ng-controller="sztaxiController">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/moment-with-locales.min.js"></script>
+<script>
+    var sztaxiApp = angular.module('shenzhenTaxis', []);
+    sztaxiApp.controller('sztaxiController', function ($scope,$http) {
+        $scope.welcomeMsg = 'Welcome to Shenzhen Taxi Trajectory Visualization toolkit.';
+
+        //Configuring start time
+        $scope.startTime = new Date(1451664000000);
+        $scope.startTimeOffset = 720;
+        $scope.startTimeDisplay = moment($scope.startTime);
+        $scope.$watch("startTimeOffset", function (newValue, oldValue) {
+            $scope.startTime.setHours(0, $scope.startTimeOffset);
+            $scope.startTimeDisplay = moment($scope.startTime).format("MMMM Do YYYY, h:mm:ss a");
+        });
+
+        //Configuring end time
+        $scope.endTime = new Date(1451664000000);
+        $scope.endTimeOffset = 720;
+        $scope.endTimeDisplay = moment($scope.endTime);
+        $scope.$watch("endTimeOffset", function (newValue, oldValue) {
+            $scope.endTime.setHours(0, $scope.endTimeOffset);
+            $scope.endTimeDisplay = moment($scope.endTime).format("MMMM Do YYYY, h:mm:ss a");
+        });
+        $scope.licensePlate = "";
+
+
+        $scope.receiveTimestamps = function () {
+            if ($scope.startTimeOffset > $scope.endTimeOffset || $scope.licensePlate===""){
+                alert("Not a valid time range");
+            }
+            else{
+                console.log($scope.startTime.getTime());
+                var queryCriteria = {  "timeRecorded": { "$lt": 1451707500, "$gt":1451706900 },"licensePlate":"粤BV9721" } ;
+                var response = $http.post("localhost:4000/queryFromDB",queryCriteria);
+                console.log(response);
+                $scope.licensePlate = "";
+                $scope.startTimeOffset = 720;
+                $scope.endTimeOffset = 720;
+            }
+        };
+
+
+    });
+</script>
+
+<div class="container">
+    <h5>{{welcomeMsg}}</h5>
+    <form class="col s12" ng-submit="receiveTimestamps()">
+        <p class="range-field">
+            <input type="range" min="0" max="1439" ng-model="startTimeOffset">
+        <p>{{startTimeDisplay}}</p>
+        <p class="range-field">
+            <input type="range" min="0" max="1439" ng-model="endTimeOffset">
+        <p>{{endTimeDisplay}}</p>
+        </p>
+        <div class="row">
+            <div class="input-field col s6">
+                <input id="license_Plate" type="text" class="validate" ng-model="licensePlate">
+                <label for="license_Plate">Taxi's License Plate</label>
+            </div>
+        </div>
+        <button class="btn waves-effect waves-light" type="submit">Confirm<i class="material-icons right">send</i>
+        </button>
+    </form>
+    <br><br>
+
+    <div id="mapid" style="width: 900px; height: 700px"></div>
+
+
+</div>
+
+
+<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.js"></script>
+<script src="src/utilities.js"></script>
+<script src="main.js"></script>
+
+
+</body>
+</html>
