@@ -6,7 +6,6 @@ from pymongo import MongoClient
 client = MongoClient()
 db = client.testDB
 
-trajectoryArray = []
 records = []
 with open("GPS_2016_01_02", 'r') as file:
     while True:
@@ -16,7 +15,7 @@ with open("GPS_2016_01_02", 'r') as file:
         else:
             infoArray = entry.split(',')
 
-            # 0. license plate
+            # 01  . license plate
             # TODO: write regular expressions to check the data validity
             try:
                 licensePlate = infoArray[0]
@@ -56,4 +55,5 @@ with open("GPS_2016_01_02", 'r') as file:
             oneRecord = {"licensePlate": licensePlate, "latitude": latitude,
                          "longitude": longitude, "timeRecorded": timeInNumber}
             records.append(oneRecord)
-    result = db.shenzhenTaxis2.insert(records)
+    print(len(records))
+    result = db.shenzhenTaxis.insert(records)
