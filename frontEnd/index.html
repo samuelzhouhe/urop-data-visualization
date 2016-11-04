@@ -46,8 +46,10 @@
             else{
                 console.log($scope.startTime.getTime());
                 var queryCriteria = {  "timeRecorded": { "$lt": 1451707500, "$gt":1451706900 },"licensePlate":"粤BV9721" } ;
-                var response = $http.post("localhost:4000/queryFromDB",queryCriteria);
+                var response = $http.post("http://127.0.0.1:4000/queryFromDB",queryCriteria);
                 console.log(response);
+                console.log(response.$$state);
+                console.log(response.$$state.status);
                 $scope.licensePlate = "";
                 $scope.startTimeOffset = 720;
                 $scope.endTimeOffset = 720;

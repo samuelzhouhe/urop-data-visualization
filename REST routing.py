@@ -1,6 +1,7 @@
 import pymongo
 from pymongo import MongoClient
 from flask import Flask, request, jsonify
+from flask_cors import CORS, cross_origin
 
 client = MongoClient()
 db = client.testDB  # name of database: 'testDB'
@@ -11,11 +12,12 @@ print(db.shenzhenTaxis.count())
 db.shenzhenTaxis.create_index([("timeRecorded", pymongo.ASCENDING)])
 
 app = Flask(__name__)
+CORS(app)
 
 #Hello world routing
 @app.route('/')
 def hello_world():
-    return jsonify({'message': 'Hello world'}), 404
+    return jsonify({'message': 'Hello world'}), 200
 
 #Any query from the entire database
 @app.route('/queryFromDB', methods=['POST'])
