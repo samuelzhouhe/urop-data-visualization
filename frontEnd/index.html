@@ -16,7 +16,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/moment-with-locales.min.js"></script>
 <script>
     var sztaxiApp = angular.module('shenzhenTaxis', []);
-    sztaxiApp.controller('sztaxiController', function ($scope,$http) {
+    sztaxiApp.controller('sztaxiController', function ($scope, $http) {
         $scope.welcomeMsg = 'Welcome to Shenzhen Taxi Trajectory Visualization toolkit.';
 
         //Configuring start time
@@ -40,16 +40,28 @@
 
 
         $scope.receiveTimestamps = function () {
-            if ($scope.startTimeOffset > $scope.endTimeOffset || $scope.licensePlate===""){
+            if ($scope.startTimeOffset > $scope.endTimeOffset || $scope.licensePlate === "") {
                 alert("Not a valid time range");
             }
-            else{
+            else {
                 console.log($scope.startTime.getTime());
-                var queryCriteria = {  "timeRecorded": { "$lt": 1451707500, "$gt":1451706900 },"licensePlate":"粤BV9721" } ;
-                var response = $http.post("http://127.0.0.1:4000/queryFromDB",queryCriteria);
-                console.log(response);
-                console.log(response.$$state);
-                console.log(response.$$state.status);
+
+                //Send http request
+                var queryCriteria = {
+                    "timeRecorded": {
+                        "$lt": $scope.endTime.getTime() / 1000,
+                        "$gt": $scope.startTime.getTime() / 1000
+                    }, "licensePlate": $scope.licensePlate
+                };
+                $http.post('http://127.0.0.1:4000/queryFromDB', queryCriteria).then(function (res) {
+                    console.log(res);
+                    console.log(res.data);
+                    for (var i = 0; i < res.data.length; i++) {
+                        console.log(res.data[i]);
+                    }
+                }, function (res) {
+                    console.log(res);
+                });
                 $scope.licensePlate = "";
                 $scope.startTimeOffset = 720;
                 $scope.endTimeOffset = 720;

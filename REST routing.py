@@ -1,7 +1,7 @@
 import pymongo
 from pymongo import MongoClient
 from flask import Flask, request, jsonify
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
 
 client = MongoClient()
 db = client.testDB  # name of database: 'testDB'
@@ -50,4 +50,3 @@ def getTimeRange():
     return jsonify(result), 200
 
 app.run('127.0.0.1', '4000')
-print("Running on localhost:4000")
