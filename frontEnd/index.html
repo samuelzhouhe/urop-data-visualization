@@ -15,61 +15,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/moment-with-locales.min.js"></script>
 <script>
-    var sztaxiApp = angular.module('shenzhenTaxis', []);
-    sztaxiApp.controller('sztaxiController', function ($scope, $http) {
-        $scope.welcomeMsg = 'Welcome to Shenzhen Taxi Trajectory Visualization toolkit.';
 
-        //Configuring start time
-        $scope.startTime = new Date(1451664000000);
-        $scope.startTimeOffset = 720;
-        $scope.startTimeDisplay = moment($scope.startTime);
-        $scope.$watch("startTimeOffset", function (newValue, oldValue) {
-            $scope.startTime.setHours(0, $scope.startTimeOffset);
-            $scope.startTimeDisplay = moment($scope.startTime).format("MMMM Do YYYY, h:mm:ss a");
-        });
-
-        //Configuring end time
-        $scope.endTime = new Date(1451664000000);
-        $scope.endTimeOffset = 720;
-        $scope.endTimeDisplay = moment($scope.endTime);
-        $scope.$watch("endTimeOffset", function (newValue, oldValue) {
-            $scope.endTime.setHours(0, $scope.endTimeOffset);
-            $scope.endTimeDisplay = moment($scope.endTime).format("MMMM Do YYYY, h:mm:ss a");
-        });
-        $scope.licensePlate = "";
-
-
-        $scope.receiveTimestamps = function () {
-            if ($scope.startTimeOffset > $scope.endTimeOffset || $scope.licensePlate === "") {
-                alert("Not a valid time range");
-            }
-            else {
-                console.log($scope.startTime.getTime());
-
-                //Send http request
-                var queryCriteria = {
-                    "timeRecorded": {
-                        "$lt": $scope.endTime.getTime() / 1000,
-                        "$gt": $scope.startTime.getTime() / 1000
-                    }, "licensePlate": $scope.licensePlate
-                };
-                $http.post('http://127.0.0.1:4000/queryFromDB', queryCriteria).then(function (res) {
-                    console.log(res);
-                    console.log(res.data);
-                    for (var i = 0; i < res.data.length; i++) {
-                        console.log(res.data[i]);
-                    }
-                }, function (res) {
-                    console.log(res);
-                });
-                $scope.licensePlate = "";
-                $scope.startTimeOffset = 720;
-                $scope.endTimeOffset = 720;
-            }
-        };
-
-
-    });
 </script>
 
 <div class="container">
@@ -92,7 +38,7 @@
         </button>
     </form>
     <br><br>
-
+    <p>{{partialLocations}}</p>
     <div id="mapid" style="width: 900px; height: 700px"></div>
 
 
