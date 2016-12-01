@@ -31,4 +31,12 @@ for document in resultCursor:
     toTransfer.append(document)
 result = db.futian.insert(toTransfer)
 print(db.futian.find().count())'''
-db.shenzhenTaxis.aggregate([{'$match': transferCondition}, {'$out': "futian"}])
+#db.shenzhenTaxis.aggregate([{'$match': transferCondition}, {'$out': "futian"}])
+result = db.shenzhenTaxis.find(transferCondition)
+
+print(result)
+print(db.shenzhenTaxis.find(transferCondition).count())
+for doc in result:
+    print(doc)
+
+
